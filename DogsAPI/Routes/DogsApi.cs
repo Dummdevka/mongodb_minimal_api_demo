@@ -1,6 +1,7 @@
 ﻿using System;
 using DAL.Entities;
 using DogsAPI.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +24,14 @@ public static class DogsApi
 		return await service.adoptDog(id);
 	}
 
-	public static async Task<Results<Created<Dog>, BadRequest>> addDog(Dog dog, [FromServices] DogsService service) {
-		return await service.addDog(dog);
+	public static async Task<Results<Created<Dog>, ProblemHttpResult>> addDog(Dog dog, [FromServices] DogsService service, IValidator<Dog> validator) {
+		var validation = await validator.ValidateAsync(dog);
+		if (validation.IsValid) {
+			return await service.addDog(dog);
+		} else {
+			return TypedResults.Problem((ProblemDetails)validation.ToDictionary());
+		}
+		
 	}
 }
 

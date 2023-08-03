@@ -1,8 +1,8 @@
-﻿using System;
-using DAL;
+﻿using DAL;
 using DAL.Entities;
 using DogsAPI.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
 namespace DogsAPI.Services;
@@ -14,13 +14,17 @@ public class CharitiesService : BaseService
 	public CharitiesService(MongoConnectionFactory connectionFactory) : base(connectionFactory) { }
 
 
-	public async Task<Results<Ok<Charity>, BadRequest>> makeCharity(decimal amount, string? name) {
-		Charity charity = new Charity { Amount = amount, Name = name };
+	public async Task<Results<Ok<Charity>, ProblemHttpResult>> makeCharity(Charity charity) {
+		//Charity charity = new Charity { Amount = amount, Name = name };
 		var collection = _connectionFactory.getCollection<Charity>(CollectionName);
 		try {
 			await collection.InsertOneAsync(charity);
 		} catch (MongoWriteConcernException ex) {
-			return TypedResults.BadRequest();
+			ProblemDetails details = new() {
+				Status = 422,
+				Title = "Invalida data"
+			};  
+			return TypedResults.Problem(details);
 		}
 		
 		return TypedResults.Ok(charity);

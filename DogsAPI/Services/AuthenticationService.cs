@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net;
-using DAL;
+﻿using DAL;
 using DAL.Entities;
 using DogsAPI.Abstractions;
-using DogsAPI.Exceptions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -27,14 +24,12 @@ namespace DogsAPI.Services
 
 			User user = await collection.Find(filter).SingleOrDefaultAsync();
 			if (user is null) {
-				//return Problem
 				ProblemDetails details = new() {
 					Title = "This email does not exist in our system.",
 					Status = 404,
 				};
 				return TypedResults.Problem(details);
 			}
-			//User user = result.FirstOrDefault();
 			string token = _jwtTokenProvider.Generate(user);
 			return TypedResults.Ok(token);
 		}

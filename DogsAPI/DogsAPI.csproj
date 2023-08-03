@@ -14,25 +14,28 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
+    <PackageReference Include="FluentValidation" Version="11.6.0" />
+    <PackageReference Include="FluentValidation.WebAPI" Version="8.6.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Abstractions\" />
     <None Remove="Routes\" />
     <None Remove="Services\" />
-    <None Remove="Exceptions\" />
     <None Remove="Providers\" />
     <None Remove="OptionsSetup\" />
     <None Remove="Options\" />
+    <None Remove="Validators\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstractions\" />
     <Folder Include="Routes\" />
     <Folder Include="Services\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="Providers\" />
     <Folder Include="OptionsSetup\" />
     <Folder Include="Options\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

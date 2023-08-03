@@ -5,7 +5,8 @@ using DogsAPI.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DogsAPI.Options;
 using DogsAPI.OptionsSetup;
-using Hellang.Middleware.ProblemDetails;
+using FluentValidation;
+using DogsAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(DogValidator));
 
 var app = builder.Build();
 

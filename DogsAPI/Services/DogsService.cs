@@ -40,15 +40,20 @@ public class DogsService: BaseService
 		return TypedResults.Ok(updatedDog);
 	}
 
-	public async Task<Results<Created<Dog>,BadRequest>> addDog(Dog dog) {
+	public async Task<Results<Created<Dog>,ProblemHttpResult>> addDog(Dog dog) {
 		var collection = _connectionFactory.getCollection<Dog>(CollectionName);
 		try {
 			await collection.InsertOneAsync(dog);
 		} catch (MongoWriteConcernException ex) {
-			return TypedResults.BadRequest();
+			ProblemDetails details = new() {
+				Title = "Dog could not be created",
+				Detail = "Make sure that dog's name is unique!",
+				Status = 422
+			};
+			return TypedResults.Problem(details);
 		}
 		
-		return TypedResults.Created("new dog", dog);
+		return TypedResults.Created($"/api/dog/{dog.Id}", dog);
 	}
 }
 
