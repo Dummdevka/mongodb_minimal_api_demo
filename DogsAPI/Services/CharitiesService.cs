@@ -14,18 +14,12 @@ public class CharitiesService : BaseService
 	public CharitiesService(MongoConnectionFactory connectionFactory) : base(connectionFactory) { }
 
 
-	public async Task<Results<Ok<Charity>, ProblemHttpResult>> makeCharity(Charity charity) {
+	public async Task<Ok<Charity>> makeCharity(Charity charity) {
 		//Charity charity = new Charity { Amount = amount, Name = name };
 		var collection = _connectionFactory.getCollection<Charity>(CollectionName);
-		try {
-			await collection.InsertOneAsync(charity);
-		} catch (MongoWriteConcernException ex) {
-			ProblemDetails details = new() {
-				Status = 422,
-				Title = "Invalida data"
-			};  
-			return TypedResults.Problem(details);
-		}
+
+		await collection.InsertOneAsync(charity);
+		
 		
 		return TypedResults.Ok(charity);
 	}

@@ -40,7 +40,7 @@ public class DogsService: BaseService
 		return TypedResults.Ok(updatedDog);
 	}
 
-	public async Task<Results<Created<Dog>,ProblemHttpResult>> addDog(Dog dog) {
+	public async Task<Results<Created<Dog>,ValidationProblem>> addDog(Dog dog) {
 		var collection = _connectionFactory.getCollection<Dog>(CollectionName);
 		try {
 			await collection.InsertOneAsync(dog);
@@ -50,7 +50,7 @@ public class DogsService: BaseService
 				Detail = "Make sure that dog's name is unique!",
 				Status = 422
 			};
-			return TypedResults.Problem(details);
+			return TypedResults.ValidationProblem((IDictionary<string, string[]>)details);
 		}
 		
 		return TypedResults.Created($"/api/dog/{dog.Id}", dog);
